@@ -5,26 +5,19 @@
 import 'package:flutter/material.dart';
 
 import 'category.dart';
-import 'category_tile.dart';
+import 'category_list_tile.dart';
 import 'unit.dart';
 
 final _backgroundColor = Colors.green[100];
 
-/// Category Route (screen).
-///
-/// This is the 'home' screen of the Unit Converter. It shows a header and
-/// a list of [Categories].
-///
-/// While it is named CategoryRoute, a more apt name would be CategoryScreen,
-/// because it is responsible for the UI at the route's destination.
-class CategoryRoute extends StatefulWidget {
-  const CategoryRoute();
+class CategoryListScreen extends StatefulWidget {
+  const CategoryListScreen();
 
   @override
-  _CategoryRouteState createState() => _CategoryRouteState();
+  _CategoryListScreenState createState() => _CategoryListScreenState();
 }
 
-class _CategoryRouteState extends State<CategoryRoute> {
+class _CategoryListScreenState extends State<CategoryListScreen> {
   // TODO: Keep track of a default [Category], and the currently-selected
   // [Category]
   final _categories = <Category>[];
@@ -98,7 +91,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
   Widget _buildCategoryWidgets() {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
-        return CategoryTile(
+        return CategoryListTile(
           category: _categories[index],
           onTap: _onCategoryTap,
         );

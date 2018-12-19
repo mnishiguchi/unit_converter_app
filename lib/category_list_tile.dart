@@ -10,21 +10,19 @@ import 'package:meta/meta.dart';
 import 'category.dart';
 import 'unit_converter.dart';
 
-// We use an underscore to indicate that these variables are private.
-// See https://www.dartlang.org/guides/language/effective-dart/design#libraries
 const _rowHeight = 100.0;
 final _borderRadius = BorderRadius.circular(_rowHeight / 2);
 
-/// A [CategoryTile] to display a [Category].
-class CategoryTile extends StatelessWidget {
+/// A [CategoryListTile] to display a [Category].
+class CategoryListTile extends StatelessWidget {
   final Category category;
   final ValueChanged<Category> onTap;
 
-  /// The [CategoryTile] shows the name and color of a [Category] for unit
+  /// The [CategoryListTile] shows the name and color of a [Category] for unit
   /// conversions.
   ///
   /// Tapping on it brings you to the unit converter.
-  const CategoryTile({
+  const CategoryListTile({
     Key key,
     @required this.category,
     @required this.onTap,

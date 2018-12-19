@@ -1,5 +1,5 @@
-name: task_07_backdrop
-description: Work in progress for a Unit Converter app.
+name: unit_converter_app
+description: a Unit Converter app.
 
 dependencies:
   flutter:
