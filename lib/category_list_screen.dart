@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'category.dart';
 import 'category_list_tile.dart';
 import 'unit.dart';
+import 'unit_converter.dart';
+import 'backdrop.dart';
 
 final _backgroundColor = Colors.green[100];
 
@@ -18,9 +20,11 @@ class CategoryListScreen extends StatefulWidget {
 }
 
 class _CategoryListScreenState extends State<CategoryListScreen> {
-  // TODO: Keep track of a default [Category], and the currently-selected
-  // [Category]
+  Category _defaultCategory;
+  Category _currentCategory;
+
   final _categories = <Category>[];
+
   static const _categoryNames = <String>[
     'Length',
     'Area',
@@ -31,6 +35,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     'Energy',
     'Currency',
   ];
+  // NOTE: The list indeces are parallell with those of _categoryNames.
   static const _baseColors = <ColorSwatch>[
     ColorSwatch(0xFF6AB7A8, {
       'highlight': Color(0xFF6AB7A8),
@@ -70,34 +75,29 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: Set the default [Category] for the unit converter that opens
+
+    // Convert caterory names into a list of Category objects.
     for (var i = 0; i < _categoryNames.length; i++) {
-      _categories.add(Category(
+      var category = Category(
         name: _categoryNames[i],
         color: _baseColors[i],
         iconLocation: Icons.cake,
         units: _retrieveUnitList(_categoryNames[i]),
-      ));
+      );
+
+      _categories.add(category);
+
+      if (i == 0) {
+        _defaultCategory = category;
+      }
     }
   }
 
-  // TODO: Fill out this function
   /// Function to call when a [Category] is tapped.
-  void _onCategoryTap(Category category) {}
-
-  /// Makes the correct number of rows for the list view.
-  ///
-  /// For portrait, we use a [ListView].
-  Widget _buildCategoryWidgets() {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        return CategoryListTile(
-          category: _categories[index],
-          onTap: _onCategoryTap,
-        );
-      },
-      itemCount: _categories.length,
-    );
+  void _onCategoryTap(Category category) {
+    setState(() {
+      _currentCategory = category;
+    });
   }
 
   /// Returns a list of mock [Unit]s.
@@ -113,29 +113,30 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Import and use the Backdrop widget
-    final listView = Container(
-      color: _backgroundColor,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: _buildCategoryWidgets(),
-    );
-
-    final appBar = AppBar(
-      elevation: 0.0,
-      title: Text(
-        'Unit Converter',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 30.0,
+    return Backdrop(
+      currentCategory: _currentCategory ?? _defaultCategory,
+      frontTitle: Text('Unit Converter'),
+      frontPanel: _currentCategory == null
+          ? UnitConverter(category: _defaultCategory)
+          : UnitConverter(category: _currentCategory),
+      backTitle: Text('Select a Category'),
+      backPanel: Container(
+        color: _backgroundColor,
+        padding: EdgeInsets.only(
+          left: 8.0,
+          right: 8.0,
+          bottom: 48.0,
+        ),
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return CategoryListTile(
+              category: _categories[index],
+              onTap: _onCategoryTap,
+            );
+          },
+          itemCount: _categories.length,
         ),
       ),
-      centerTitle: true,
-      backgroundColor: _backgroundColor,
-    );
-
-    return Scaffold(
-      appBar: appBar,
-      body: listView,
     );
   }
 }
