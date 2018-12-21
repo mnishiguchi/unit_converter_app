@@ -111,6 +111,42 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     });
   }
 
+  Widget _buildBackPanel({orientation: Orientation}) {
+    var _categoryList;
+    if (orientation == Orientation.portrait) {
+      _categoryList = ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return CategoryListTile(
+            category: _categories[index],
+            onTap: _onCategoryTap,
+          );
+        },
+        itemCount: _categories.length,
+      );
+    } else {
+      _categoryList = GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 3.0,
+        children: _categories.map((Category c) {
+          return CategoryListTile(
+            category: c,
+            onTap: _onCategoryTap,
+          );
+        }).toList(),
+      );
+    }
+
+    return Container(
+      color: _backgroundColor,
+      padding: EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        bottom: 48.0,
+      ),
+      child: _categoryList,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Backdrop(
@@ -120,23 +156,8 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
           ? UnitConverter(category: _defaultCategory)
           : UnitConverter(category: _currentCategory),
       backTitle: Text('Select a Category'),
-      backPanel: Container(
-        color: _backgroundColor,
-        padding: EdgeInsets.only(
-          left: 8.0,
-          right: 8.0,
-          bottom: 48.0,
-        ),
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return CategoryListTile(
-              category: _categories[index],
-              onTap: _onCategoryTap,
-            );
-          },
-          itemCount: _categories.length,
-        ),
-      ),
+      backPanel:
+          _buildBackPanel(orientation: MediaQuery.of(context).orientation),
     );
   }
 }

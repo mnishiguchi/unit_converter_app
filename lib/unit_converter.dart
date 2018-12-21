@@ -163,8 +163,8 @@ class _UnitConverterState extends State<UnitConverter> {
       child: Theme(
         // This sets the color of the [DropdownMenuItem]
         data: Theme.of(context).copyWith(
-              canvasColor: Colors.grey[50],
-            ),
+          canvasColor: Colors.grey[50],
+        ),
         child: DropdownButtonHideUnderline(
           child: ButtonTheme(
             alignedDropdown: true,
@@ -180,9 +180,8 @@ class _UnitConverterState extends State<UnitConverter> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final input = Padding(
+  Widget _buildInput() {
+    return Padding(
       padding: _padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -209,16 +208,10 @@ class _UnitConverterState extends State<UnitConverter> {
         ],
       ),
     );
+  }
 
-    final arrows = RotatedBox(
-      quarterTurns: 1,
-      child: Icon(
-        Icons.compare_arrows,
-        size: 40.0,
-      ),
-    );
-
-    final output = Padding(
+  Widget _buildOutput() {
+    return Padding(
       padding: _padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -240,19 +233,42 @@ class _UnitConverterState extends State<UnitConverter> {
         ],
       ),
     );
+  }
 
-    final converter = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+  @override
+  Widget build(BuildContext context) {
+    final arrows = RotatedBox(
+      quarterTurns: 1,
+      child: Icon(
+        Icons.compare_arrows,
+        size: 40.0,
+      ),
+    );
+
+    final converter = ListView(
       children: [
-        input,
+        _buildInput(),
         arrows,
-        output,
+        _buildOutput(),
       ],
     );
 
+    // Switch styles based on parent's orientation
     return Padding(
       padding: _padding,
-      child: converter,
+      child: OrientationBuilder(
+          builder: (BuildContext context, Orientation orientation) {
+        if (orientation == Orientation.portrait) {
+          return converter;
+        } else {
+          return Center(
+            child: Container(
+              child: converter,
+              width: 450.0,
+            ),
+          );
+        }
+      }),
     );
   }
 }
